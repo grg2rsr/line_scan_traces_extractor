@@ -26,4 +26,14 @@ upon closing the windows, a `.csv` file is written with the following format
 + x1: the end x coordinate of the ROI 
 + rest: each line y coordinate (line number) and corresponding value of each ROI 
 
-happy slicing! Leave me a comment if you think a specific feature would be useful ...
+## Dependencies
+all dependencies are included in standard scientific python bundles, such as the [anaconda distribution from continuum](https://www.continuum.io/downloads) 
+
++ python 2.7
++ matplotlib
++ scipy
++ pandas
+
+
+## Happy slicing!
+Leave me a comment if you think a specific feature would be useful ...

@@ -1,38 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Oct 19 10:35:03 2015
-
-@author: georg
-"""
-
-"""
-#==============================================================================
-# USAGE
-#==============================================================================
-
-execute this file with python, pass it 1 or 3 arguments
-
-1: path to the file that you want to analyze
-2,3 (optional): 2 integer values, if specified, the dF/F will be calculated based
-on the signal between those frames. So if your stimulus starts at frame 40, and 
-there is too much bleaching at the first 5 frames, you would run
-
-
-python interactive_trajectory_extractor.py path_to_lsm_file 5 40
-
-
-this will open two windows, select a region of interest by moving the mouse over 
-it. Scrolling the mouse wheel will change it's y-extent. Middle mouse button 
-press will select this region for extraction, an average is made inside the ROI.
-Upon closing all windows, a .csv will be written with the x1:x2 coordinates of 
-the ROI as the first two lines after the header (which just contains the order
-of clicks from 0 on)
-
-happy slicing!
-
 written by Georg Raiser 20.10.2015
 questions/bugs to grg2rsr@gmail.com
-
 """
 
 import matplotlib.pyplot as plt
@@ -73,12 +42,13 @@ class interactive_trajectory_extract(object):
         AxesImage = plt.imshow(self.data,**im_params)
         self.im_ax = AxesImage.axes
         self.im_fig = AxesImage.figure
+        self.im_ax.set_xlabel('place [px]')
+        self.im_ax.set_ylabel('line number')
         
         # coordinate calc
         self.pos = int(self.nPlaces/2) # is the position of the mouse pointer
         self.width = 11 # is x1 - x0
         self.xs = self.calc_x(self.pos,self.width) # is a tuple (x0,x1) along which is sliced
-        
         
         # add patch
         rect_params = {'facecolor':'red',
@@ -94,6 +64,11 @@ class interactive_trajectory_extract(object):
                             'color':'red'}
                             
         self.tempTrace, = self.traj_ax.plot(sp.zeros(self.nLines),**tempTrace_params)
+        self.traj_ax.set_xlabel('line number')
+        if prestim_frames:
+            self.traj_ax.set_ylabel('dF/F')
+        else:
+            self.traj_ax.set_ylabel('intensity [au]')
     
         ## extracting info
         self.coords = []
@@ -163,6 +138,9 @@ class interactive_trajectory_extract(object):
             self.coords.append(self.xs)
             self.traces.append(self.slice_trace(*self.xs))
             self.traj_ax.plot(self.slice_trace(*self.xs),lw=1,color='grey')
+            
+            rect = Rectangle((self.xs[0],0),self.width,self.nLines,facecolor='grey',alpha=0.5)
+            self.im_ax.add_patch(rect)
         
     def slice_trace(self,x0,x1):
         sliced = sp.average(self.data[:,x0:x1],axis=1)  
@@ -190,28 +168,20 @@ class interactive_trajectory_extract(object):
 if __name__ == '__main__':
 
     ### testing
-#    path = '/home/georg/python/trajectories/steffis_data/ant2_L1_Sum17.lsm'
-#    prestim_frames = (0,40)
+    path = '/home/georg/python/line_scan_traces_extractor/test_data/ant2_L1_Sum17.lsm'
+    prestim_frames = (0,40)
     
     ### nontesting
-    if len(sys.argv) == 1:
-        print "no path to data given"
-        
-    if len(sys.argv) == 2:
-        path = sys.argv[1]
-        prestim_frames = None
-    
-    if len(sys.argv) == 4:
-        path = sys.argv[1]
-        prestim_frames = (int(sys.argv[2]),int(sys.argv[3]))
+#    if len(sys.argv) == 1:
+#        print "no path to data given"
+#        
+#    if len(sys.argv) == 2:
+#        path = sys.argv[1]
+#        prestim_frames = None
+#    
+#    if len(sys.argv) == 4:
+#        path = sys.argv[1]
+#        prestim_frames = (int(sys.argv[2]),int(sys.argv[3]))
 
     interactive_trajectory_extract(path,prestim_frames=prestim_frames)
-    
-    
-    
-        
-
-    
-    
-    
     

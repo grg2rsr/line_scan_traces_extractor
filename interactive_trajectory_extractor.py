@@ -168,20 +168,20 @@ class interactive_trajectory_extract(object):
 if __name__ == '__main__':
 
     ### testing
-    path = '/home/georg/python/line_scan_traces_extractor/test_data/ant2_L1_Sum17.lsm'
-    prestim_frames = (0,40)
+#    path = '/home/georg/python/line_scan_traces_extractor/test_data/ant2_L1_Sum17.lsm'
+#    prestim_frames = (0,40)
     
     ### nontesting
-#    if len(sys.argv) == 1:
-#        print "no path to data given"
-#        
-#    if len(sys.argv) == 2:
-#        path = sys.argv[1]
-#        prestim_frames = None
-#    
-#    if len(sys.argv) == 4:
-#        path = sys.argv[1]
-#        prestim_frames = (int(sys.argv[2]),int(sys.argv[3]))
+    if len(sys.argv) == 1:
+        print "no path to data given"
+        
+    if len(sys.argv) == 2:
+        path = sys.argv[1]
+        prestim_frames = None
+    
+    if len(sys.argv) == 4:
+        path = sys.argv[1]
+        prestim_frames = (int(sys.argv[2]),int(sys.argv[3]))
 
     interactive_trajectory_extract(path,prestim_frames=prestim_frames)
     

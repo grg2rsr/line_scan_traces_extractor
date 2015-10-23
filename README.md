@@ -1,6 +1,9 @@
 # line scan traces extractor
 A small python tool to interactively extract time traces from functional imaging line scans. The Image data shape has to be `x = place` and `y = repetition` just as the following
 
+![ ](https://github.com/grg2rsr/line_scan_traces_extractor/blob/master/example_scan.jpg  "Example Data")
+
+
 ## Usage
 in a console, run 
 `python interactive_trajectory_extractor.py <path_to_file>` to open two windows, one showing the raw data, and one showing the extracted trace based on 
@@ -11,6 +14,8 @@ The ROI itself is shown as a box, and the width can be changed by scrolling the 
 
 alternatively, you can run 
 `python interactive_trajectory_extractor.py <path_to_file> <start> <stop>` to automatically rescale the data to dF/F , using the lines between `start` and `stop` to calculate the background value
+
+![ ](https://github.com/grg2rsr/line_scan_traces_extractor/blob/master/screenshot.png  "program screenshot")
 
 ### Output
 upon closing the windows, a `.csv` file is written with the following format

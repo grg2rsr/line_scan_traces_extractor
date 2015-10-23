@@ -17,6 +17,8 @@ alternatively, you can run
 
 ![ ](https://github.com/grg2rsr/line_scan_traces_extractor/blob/master/screenshot.png  "program screenshot")
 
+Traces are extracted by clicking the the middle mouse button.
+
 ### Output
 upon closing the windows, a `.csv` file is written with the following format
 + header: ROI number, starting at 0
@@ -24,4 +26,4 @@ upon closing the windows, a `.csv` file is written with the following format
 + x1: the end x coordinate of the ROI 
 + rest: each line y coordinate (line number) and corresponding value of each ROI 
 
-happy slicing!
+happy slicing! Leave me a comment if you think a specific feature would be useful ...

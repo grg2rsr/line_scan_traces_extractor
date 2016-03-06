@@ -12,11 +12,11 @@ import os
 import tifffile
 import pandas as pd
 
-class interactive_trajectory_extract(object):
+class interactive_traces_extract(object):
     """ 
-    interactively extract trajectories from line scan images. Image has to be in
+    interactively extract traces from line scan images. Image has to be in
     the format of x: time, y: line index, so each horizontal line of pixels 
-    represents one scan of the trajectory, the line below is the next etc.
+    represents one scan of the traces, the line below is the next etc.
     
     """
     def __init__(self,image_path,prestim_frames=None):
@@ -37,7 +37,8 @@ class interactive_trajectory_extract(object):
         im_params = {'interpolation':'none',
                      'cmap':'jet',
                      'extent':[0,self.nPlaces,self.nLines,0],
-                     'origin':'upper'} # image coordinates
+                     'origin':'upper',
+                     'aspect':0.01} 
                      
         AxesImage = plt.imshow(self.data,**im_params)
         self.im_ax = AxesImage.axes
@@ -58,17 +59,17 @@ class interactive_trajectory_extract(object):
         self.im_ax.add_patch(self.Rect)
         
         # extracted traces preview
-        self.traj_fig = plt.figure()
-        self.traj_ax = self.traj_fig.add_subplot(111)
+        self.traces_fig = plt.figure()
+        self.traces_ax = self.traces_fig.add_subplot(111)
         tempTrace_params = {'linewidth':2,
                             'color':'red'}
                             
-        self.tempTrace, = self.traj_ax.plot(sp.zeros(self.nLines),**tempTrace_params)
-        self.traj_ax.set_xlabel('line number')
+        self.tempTrace, = self.traces_ax.plot(sp.zeros(self.nLines),**tempTrace_params)
+        self.traces_ax.set_xlabel('line number')
         if prestim_frames:
-            self.traj_ax.set_ylabel('dF/F')
+            self.traces_ax.set_ylabel('dF/F')
         else:
-            self.traj_ax.set_ylabel('intensity [au]')
+            self.traces_ax.set_ylabel('intensity [au]')
     
         ## extracting info
         self.coords = []
@@ -89,7 +90,7 @@ class interactive_trajectory_extract(object):
 
     def write_output(self):
         """ write ouput upon closing the image figure """
-        outpath = os.path.splitext(self.path)[0]+'_trajectories.csv'
+        outpath = os.path.splitext(self.path)[0]+'_traces.csv'
         if len(self.coords) > 0:
             print 'writing to ' + outpath
             coors = pd.DataFrame(sp.array(self.coords).T,index=['x0','x1'])
@@ -137,7 +138,7 @@ class interactive_trajectory_extract(object):
         if event.button==2:
             self.coords.append(self.xs)
             self.traces.append(self.slice_trace(*self.xs))
-            self.traj_ax.plot(self.slice_trace(*self.xs),lw=1,color='grey')
+            self.traces_ax.plot(self.slice_trace(*self.xs),lw=1,color='grey')
             
             rect = Rectangle((self.xs[0],0),self.width,self.nLines,facecolor='grey',alpha=0.5)
             self.im_ax.add_patch(rect)
@@ -158,9 +159,9 @@ class interactive_trajectory_extract(object):
         self.tempTrace.set_ydata(self.slice_trace(*self.xs))
         
         # update traces preview
-        self.traj_ax.relim()
-        self.traj_ax.autoscale_view(True,True,True)
-        self.traj_fig.canvas.draw()
+        self.traces_ax.relim()
+        self.traces_ax.autoscale_view(True,True,True)
+        self.traces_fig.canvas.draw()
         
         # update figure
         self.im_fig.canvas.draw()
@@ -183,5 +184,5 @@ if __name__ == '__main__':
         path = sys.argv[1]
         prestim_frames = (int(sys.argv[2]),int(sys.argv[3]))
 
-    interactive_trajectory_extract(path,prestim_frames=prestim_frames)
+    interactive_traces_extract(path,prestim_frames=prestim_frames)
     

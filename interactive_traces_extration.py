@@ -9,8 +9,10 @@ from matplotlib.patches import Rectangle
 import scipy as sp
 import sys
 import os
-import tifffile
 import pandas as pd
+import warnings
+warnings.filterwarnings("ignore")
+import tifffile
 
 class interactive_traces_extract(object):
     """ 
@@ -38,7 +40,7 @@ class interactive_traces_extract(object):
                      'cmap':'jet',
                      'extent':[0,self.nPlaces,self.nLines,0],
                      'origin':'upper',
-                     'aspect':0.01} 
+                     'aspect':sp.float32(self.data.shape[1]) / self.data.shape[0]} 
                      
         AxesImage = plt.imshow(self.data,**im_params)
         self.im_ax = AxesImage.axes
@@ -172,9 +174,12 @@ if __name__ == '__main__':
 #    path = '/home/georg/python/line_scan_traces_extractor/test_data/ant2_L1_Sum17.lsm'
 #    prestim_frames = (0,40)
     
+    doc = """ A small python tool to interactively extract time traces from functional imaging line scans. The Image data shape has to be x = place and y = repetition. Usage: run this file with the following arguments <path_to_file> <start> <stop>. Start and stop are optional and mark the index bounds used for background used in dF/F calculation. If ommited, raw values are used."""
+           
     ### nontesting
     if len(sys.argv) == 1:
-        print "no path to data given"
+        print doc
+        sys.exit()
         
     if len(sys.argv) == 2:
         path = sys.argv[1]
